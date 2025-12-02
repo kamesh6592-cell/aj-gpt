@@ -4,7 +4,7 @@ import {
   ChatContainerContent,
   ChatContainerRoot,
 } from "@/components/chat-container"
-import { DotsLoader } from "@/components/ui/loader"
+
 import {
   Message,
   MessageAction,
@@ -35,6 +35,7 @@ import {
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
 import { memo, useState } from "react"
+import Image from "next/image"
 
 type MessageComponentProps = {
   message: UIMessage
@@ -163,7 +164,7 @@ function PromptInputWithActions() {
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <img src="/AJ.svg" alt="AJ STUDIOZ" className="size-12 mr-3" />
+                  <Image src="/AJ.svg" alt="AJ STUDIOZ" width={48} height={48} className="size-12 mr-3" />
                   <h2 className="text-3xl font-bold">AJ STUDIOZ</h2>
                 </div>
                 <p className="text-muted-foreground text-lg">Your AI Assistant is ready to help</p>

@@ -1,5 +1,6 @@
 import { PromptInputWithActions } from "@/components/prompt-input-with-actions";
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import {
   Sidebar,
   SidebarContent,
@@ -142,7 +143,7 @@ function SidebarWithChatHistory() {
           size="default"
           className="flex items-center gap-2 px-3 py-2 h-auto border-0 bg-transparent hover:bg-orange-100 dark:hover:bg-orange-900/20 [--liquid-button-color:rgb(255_165_0)] text-orange-600 dark:text-orange-400"
         >
-          <img src="/AJ.svg" alt="AJ STUDIOZ" className="size-6" />
+          <Image src="/AJ.svg" alt="AJ STUDIOZ" width={24} height={24} className="size-6" />
           <span className="text-sm font-bold tracking-tight">
             AJ STUDIOZ
           </span>
@@ -181,7 +182,7 @@ export default function Home() {
           <header className="bg-background z-10 flex h-16 w-full shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
             <div className="flex items-center gap-2">
-              <img src="/AJ.svg" alt="AJ STUDIOZ" className="size-8" />
+              <Image src="/AJ.svg" alt="AJ STUDIOZ" width={32} height={32} className="size-8" />
               <span className="font-semibold">New Conversation</span>
             </div>
           </header>

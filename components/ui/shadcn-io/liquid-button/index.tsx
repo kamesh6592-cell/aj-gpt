@@ -46,7 +46,7 @@ function LiquidButton({
       whileTap={{ scale: 0.95 }}
       whileHover={{ scale: 1.05 }}
       className={cn(buttonVariants({ variant, size, className }))}
-      {...(props as any)}
+      {...(props as HTMLMotionProps<'button'>)}
     />
   );
 }

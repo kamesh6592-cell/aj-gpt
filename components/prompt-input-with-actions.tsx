@@ -302,62 +302,77 @@ function PromptInputWithActions() {
                   </OpenAIButton>
                 </Menu.Trigger>
                 <Menu.Content 
-                  width={260} 
-                  minWidth={260}
+                  width={280} 
+                  minWidth={280}
                   side="top"
                   align="start"
-                  sideOffset={8}
+                  sideOffset={12}
                 >
-                  {/* Chat Actions */}
+                  {/* New Chat - Highlighted */}
                   <Menu.Item onSelect={() => console.log('New Chat')}>
                     <div className="flex items-start gap-3">
-                      <MessageSquare size={16} className="mt-0.5" />
-                      <div className="flex flex-col">
-                        <p className="font-semibold text-sm">New Chat</p>
-                        <p className="text-xs opacity-70">Start a fresh conversation</p>
+                      <div className="p-1.5 rounded-md bg-primary/10">
+                        <MessageSquare size={16} className="text-primary" />
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <p className="font-semibold text-sm text-foreground">New Chat</p>
+                        <p className="text-xs text-muted-foreground leading-tight">Start a fresh conversation</p>
                       </div>
                     </div>
                   </Menu.Item>
                   
                   <Menu.Separator />
                   
-                  {/* Tools Section Header */}
-                  <Menu.Item onSelect={() => console.log('Tools')}>
+                  {/* Tools Section */}
+                  <div className="px-3 py-2">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Wrench size={16} className="text-muted-foreground" />
+                      <span className="text-sm font-medium text-foreground">Tools</span>
+                    </div>
+                  </div>
+                  
+                  <Menu.Item onSelect={() => console.log('Function')}>
                     <div className="flex items-center gap-3">
-                      <Wrench size={16} />
-                      <span className="font-medium">🔧 Tools</span>
+                      <div className="w-8 flex justify-center">
+                        <Zap size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm text-foreground">Function</span>
                     </div>
                   </Menu.Item>
                   
-                  {/* Tool Items */}
-                  <Menu.Item onSelect={() => console.log('Function')}>
-                    <div className="flex items-center gap-3 pl-6">
-                      <Zap size={14} />
-                      <span>Function</span>
-                    </div>
-                  </Menu.Item>
                   <Menu.Item onSelect={() => console.log('File Search')}>
-                    <div className="flex items-center gap-3 pl-6">
-                      <Search size={14} />
-                      <span>File Search</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 flex justify-center">
+                        <Search size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm text-foreground">File Search</span>
                     </div>
                   </Menu.Item>
+                  
                   <Menu.Item onSelect={() => console.log('Web Search')}>
-                    <div className="flex items-center gap-3 pl-6">
-                      <Globe size={14} />
-                      <span>Web Search</span>
+                    <div className="flex items-center gap-3 px-2 py-1">
+                      <div className="w-8 flex justify-center">
+                        <Globe size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm text-foreground">Web Search</span>
                     </div>
                   </Menu.Item>
+                  
                   <Menu.Item onSelect={() => console.log('Code Interpreter')}>
-                    <div className="flex items-center gap-3 pl-6">
-                      <Code size={14} />
-                      <span>Code Interpreter</span>
+                    <div className="flex items-center gap-3 px-2 py-1">
+                      <div className="w-8 flex justify-center">
+                        <Code size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm text-foreground">Code Interpreter</span>
                     </div>
                   </Menu.Item>
+                  
                   <Menu.Item onSelect={() => console.log('Image Generation')}>
-                    <div className="flex items-center gap-3 pl-6">
-                      <ImageIcon size={14} />
-                      <span>Image Generation</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 flex justify-center">
+                        <ImageIcon size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm text-foreground">Image Generation</span>
                     </div>
                   </Menu.Item>
                   
@@ -365,21 +380,29 @@ function PromptInputWithActions() {
                   
                   {/* Input Methods */}
                   <Menu.Item onSelect={() => console.log('Upload File')}>
-                    <div className="flex items-center gap-3">
-                      <Upload size={16} />
-                      <span>Upload File</span>
+                    <div className="flex items-center gap-3 px-2 py-2">
+                      <div className="p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                        <Upload size={16} className="text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <span className="text-sm font-medium">Upload File</span>
                     </div>
                   </Menu.Item>
+                  
                   <Menu.Item onSelect={() => console.log('Voice Input')}>
-                    <div className="flex items-center gap-3">
-                      <Mic size={16} />
-                      <span>Voice Input</span>
+                    <div className="flex items-center gap-3 px-2 py-2">
+                      <div className="p-1.5 rounded-md bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                        <Mic size={16} className="text-green-600 dark:text-green-400" />
+                      </div>
+                      <span className="text-sm font-medium">Voice Input</span>
                     </div>
                   </Menu.Item>
+                  
                   <Menu.Item onSelect={() => console.log('Camera')}>
-                    <div className="flex items-center gap-3">
-                      <Camera size={16} />
-                      <span>Camera</span>
+                    <div className="flex items-center gap-3 px-2 py-2">
+                      <div className="p-1.5 rounded-md bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+                        <Camera size={16} className="text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <span className="text-sm font-medium">Camera</span>
                     </div>
                   </Menu.Item>
                   
@@ -387,15 +410,20 @@ function PromptInputWithActions() {
                   
                   {/* Quick Actions */}
                   <Menu.Item onSelect={() => console.log('Templates')}>
-                    <div className="flex items-center gap-3">
-                      <FileText size={16} />
-                      <span>Templates</span>
+                    <div className="flex items-center gap-3 px-2 py-1">
+                      <div className="w-8 flex justify-center">
+                        <FileText size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm">Templates</span>
                     </div>
                   </Menu.Item>
+                  
                   <Menu.Item onSelect={() => console.log('Keyboard Shortcuts')}>
                     <div className="flex items-center gap-3">
-                      <Keyboard size={16} />
-                      <span>Keyboard Shortcuts</span>
+                      <div className="w-8 flex justify-center">
+                        <Keyboard size={16} className="text-muted-foreground" />
+                      </div>
+                      <span className="text-sm text-foreground">Keyboard Shortcuts</span>
                     </div>
                   </Menu.Item>
                 </Menu.Content>

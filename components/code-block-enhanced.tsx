@@ -20,8 +20,8 @@ export function CodeBlockEnhanced({
   }
 
   return (
-    <div className={cn("rounded-lg border border-border", className)} style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))' }}>
-      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))' }}>
+    <div className={cn("border border-border", className)} style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderRadius: 'var(--radius-md)' }}>
+      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderTopLeftRadius: 'var(--radius-md)', borderTopRightRadius: 'var(--radius-md)' }}>
         <span className="text-sm font-semibold text-foreground">{language}</span>
         <Button
           variant="ghost"
@@ -32,7 +32,7 @@ export function CodeBlockEnhanced({
           <Copy size={14} />
         </Button>
       </div>
-      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))' }}>
+      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderBottomLeftRadius: 'var(--radius-md)', borderBottomRightRadius: 'var(--radius-md)' }}>
         <code className={`language-${language} text-foreground`}>{code}</code>
       </pre>
     </div>

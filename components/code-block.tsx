@@ -106,20 +106,20 @@ export function OpenAICodeBlockComponent({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card">
-      <div className="flex items-center justify-between bg-muted/50 border-b border-border px-4 py-1">
-        <span className="text-sm font-semibold text-secondary">{language}</span>
+    <div className="border border-border" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderRadius: 'var(--radius-md)' }}>
+      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderTopLeftRadius: 'var(--radius-md)', borderTopRightRadius: 'var(--radius-md)' }}>
+        <span className="text-sm font-semibold text-foreground">{language}</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleCopy}
-          className="-mr-2 h-7 px-2"
+          className="-mr-2 h-8 px-2"
         >
           <Copy size={14} />
         </Button>
       </div>
-      <pre className="p-4 overflow-x-auto text-sm bg-card">
-        <code className={`language-${language}`}>{codeSnippet}</code>
+      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderBottomLeftRadius: 'var(--radius-md)', borderBottomRightRadius: 'var(--radius-md)' }}>
+        <code className={`language-${language} text-foreground`}>{codeSnippet}</code>
       </pre>
     </div>
   )

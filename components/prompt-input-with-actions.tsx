@@ -34,6 +34,8 @@ import {
   ThumbsUp,
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
+import { Menu } from "@openai/apps-sdk-ui/components/Menu"
+import { Button as OpenAIButton } from "@openai/apps-sdk-ui/components/Button"
 import { memo, useState } from "react"
 import Image from "next/image"
 
@@ -206,18 +208,37 @@ function PromptInputWithActions() {
             />
 
             <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3">
-              <div className="flex items-center gap-2">
-                <PromptInputAction tooltip="Add a new action">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="size-9 rounded-full"
-                  >
+            <div className="flex items-center gap-2">
+              <Menu>
+                <Menu.Trigger>
+                  <OpenAIButton color="primary" size="md" variant="ghost">
                     <Plus size={18} />
-                  </Button>
-                </PromptInputAction>
-
-                <PromptInputAction tooltip="Search">
+                  </OpenAIButton>
+                </Menu.Trigger>
+                <Menu.Content width={210} minWidth={210}>
+                  <Menu.Item onSelect={() => console.log('New Chat')}>
+                    <p className="font-semibold">New Chat</p>
+                    <p className="text-secondary">Start a fresh conversation</p>
+                  </Menu.Item>
+                  <Menu.Separator />
+                  <Menu.Item onSelect={() => console.log('Upload File')}>
+                    Upload File
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('Voice Input')}>
+                    Voice Input
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('Camera')}>
+                    Camera
+                  </Menu.Item>
+                  <Menu.Separator />
+                  <Menu.Item onSelect={() => console.log('Templates')}>
+                    Templates
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('Shortcuts')}>
+                    Keyboard Shortcuts
+                  </Menu.Item>
+                </Menu.Content>
+              </Menu>                <PromptInputAction tooltip="Search">
                   <Button variant="outline" className="rounded-full">
                     <Globe size={18} />
                     Search

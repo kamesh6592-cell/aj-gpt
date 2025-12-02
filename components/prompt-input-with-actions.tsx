@@ -46,7 +46,7 @@ import {
 import { TypingLoader } from "@/components/ui/loader"
 import { Menu } from "@openai/apps-sdk-ui/components/Menu"
 import { Button as OpenAIButton } from "@openai/apps-sdk-ui/components/Button"
-import { memo, useState } from "react"
+import React, { memo, useState } from "react"
 import Image from "next/image"
 
 type MessageComponentProps = {
@@ -67,14 +67,58 @@ const MessageComponent = memo(
       >
         {isAssistant ? (
           <div className="group flex w-full flex-col gap-0">
-            <MessageContent
-              className="text-foreground prose w-full min-w-0 flex-1 rounded-lg bg-transparent p-0"
-              markdown
-            >
-              {message.parts
-                .map((part) => (part.type === "text" ? part.text : null))
-                .join("")}
-            </MessageContent>
+            <div className="text-foreground prose w-full min-w-0 flex-1 rounded-lg bg-transparent p-0">
+              {(() => {
+                const content = message.parts
+                  .map((part) => (part.type === "text" ? part.text : null))
+                  .join("");
+                
+                // Check for code blocks in backticks
+                const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+                const parts = [];
+                let lastIndex = 0;
+                let match;
+                
+                while ((match = codeBlockRegex.exec(content)) !== null) {
+                  // Add text before code block
+                  if (match.index > lastIndex) {
+                    const textContent = content.slice(lastIndex, match.index);
+                    if (textContent.trim()) {
+                      parts.push(
+                        <MessageContent key={`text-${lastIndex}`} markdown className="bg-transparent p-0">
+                          {textContent}
+                        </MessageContent>
+                      );
+                    }
+                  }
+                  
+                  // Add code block
+                  const language = match[1] || 'python';
+                  const code = match[2].trim();
+                  parts.push(<CodeBlockRenderer key={`code-${match.index}`} code={code} language={language} />);
+                  
+                  lastIndex = match.index + match[0].length;
+                }
+                
+                // Add remaining text
+                if (lastIndex < content.length) {
+                  const remainingContent = content.slice(lastIndex);
+                  if (remainingContent.trim()) {
+                    parts.push(
+                      <MessageContent key={`text-${lastIndex}`} markdown className="bg-transparent p-0">
+                        {remainingContent}
+                      </MessageContent>
+                    );
+                  }
+                }
+                
+                return parts.length > 0 ? parts : (
+                  <MessageContent markdown className="bg-transparent p-0">
+                    {content}
+                  </MessageContent>
+                );
+              })()}
+            </div>
             <MessageActions
               className={cn(
                 "-ml-2.5 flex gap-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100",
@@ -125,26 +169,26 @@ const MessageComponent = memo(
 
 MessageComponent.displayName = "MessageComponent"
 
-const CodeBlockRenderer = memo(({ code, language = "typescript" }: { code: string; language?: string }) => {
+const CodeBlockRenderer = memo(({ code, language = "python" }: { code: string; language?: string }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(code)
   }
 
   return (
-    <div className="my-4 rounded-lg border border-border bg-card">
-      <div className="flex items-center justify-between bg-muted/50 border-b border-border px-4 py-1">
-        <span className="text-sm font-semibold text-secondary">{language}</span>
+    <div className="my-4 rounded-lg border border-border" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))' }}>
+      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))' }}>
+        <span className="text-sm font-semibold text-foreground">{language}</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleCopy}
-          className="-mr-2 h-7 px-2"
+          className="-mr-2 h-8 px-2 hover:bg-muted/50"
         >
           <Copy size={14} />
         </Button>
       </div>
-      <pre className="p-4 overflow-x-auto text-sm bg-card">
-        <code className={`language-${language}`}>{code}</code>
+      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))' }}>
+        <code className={`language-${language} text-foreground`}>{code}</code>
       </pre>
     </div>
   )

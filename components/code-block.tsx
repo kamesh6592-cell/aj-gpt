@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils"
 import React, { useEffect, useState } from "react"
 import { codeToHtml } from "shiki"
+import { Button } from "@/components/ui/button"
+import { Copy } from "lucide-react"
 
 export type CodeBlockProps = {
   children?: React.ReactNode
@@ -87,6 +89,38 @@ function CodeBlockGroup({
       {...props}
     >
       {children}
+    </div>
+  )
+}
+
+// Custom CodeBlock with the exact structure you requested
+export function OpenAICodeBlockComponent({ 
+  codeSnippet, 
+  language = "typescript" 
+}: { 
+  codeSnippet: string; 
+  language?: string 
+}) {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeSnippet)
+  }
+
+  return (
+    <div className="rounded-lg border border-border bg-card">
+      <div className="flex items-center justify-between bg-muted/50 border-b border-border px-4 py-1">
+        <span className="text-sm font-semibold text-secondary">{language}</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleCopy}
+          className="-mr-2 h-7 px-2"
+        >
+          <Copy size={14} />
+        </Button>
+      </div>
+      <pre className="p-4 overflow-x-auto text-sm bg-card">
+        <code className={`language-${language}`}>{codeSnippet}</code>
+      </pre>
     </div>
   )
 }

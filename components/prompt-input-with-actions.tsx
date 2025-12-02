@@ -115,6 +115,33 @@ const MessageComponent = memo(
 
 MessageComponent.displayName = "MessageComponent"
 
+const CodeBlockRenderer = memo(({ code, language = "typescript" }: { code: string; language?: string }) => {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code)
+  }
+
+  return (
+    <div className="my-4 rounded-lg border border-border bg-card">
+      <div className="flex items-center justify-between bg-muted/50 border-b border-border px-4 py-1">
+        <span className="text-sm font-semibold text-secondary">{language}</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleCopy}
+          className="-mr-2 h-7 px-2"
+        >
+          <Copy size={14} />
+        </Button>
+      </div>
+      <pre className="p-4 overflow-x-auto text-sm bg-card">
+        <code className={`language-${language}`}>{code}</code>
+      </pre>
+    </div>
+  )
+})
+
+CodeBlockRenderer.displayName = "CodeBlockRenderer"
+
 const LoadingMessage = memo(() => (
   <Message className="mx-auto flex w-full max-w-3xl flex-col items-start gap-2 px-0 md:px-10">
     <div className="group flex w-full flex-col gap-0">

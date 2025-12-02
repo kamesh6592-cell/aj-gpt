@@ -32,6 +32,16 @@ import {
   Plus,
   ThumbsDown,
   ThumbsUp,
+  MessageSquare,
+  Upload,
+  Camera,
+  FileText,
+  Search,
+  Code,
+  Image as ImageIcon,
+  Wrench,
+  Zap,
+  Keyboard,
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
 import { Menu } from "@openai/apps-sdk-ui/components/Menu"
@@ -237,32 +247,112 @@ function PromptInputWithActions() {
             <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3">
             <div className="flex items-center gap-2">
               <Menu>
-                <Menu.Trigger>
-                  <OpenAIButton color="primary" size="md" variant="ghost">
+                <Menu.Trigger asChild>
+                  <OpenAIButton 
+                    color="primary" 
+                    size="md" 
+                    variant="ghost"
+                    className="hover:bg-muted/50 transition-colors duration-150"
+                  >
                     <Plus size={18} />
                   </OpenAIButton>
                 </Menu.Trigger>
-                <Menu.Content width={210} minWidth={210}>
+                <Menu.Content 
+                  width={260} 
+                  minWidth={260}
+                  side="top"
+                  align="start"
+                  sideOffset={8}
+                >
+                  {/* Chat Actions */}
                   <Menu.Item onSelect={() => console.log('New Chat')}>
-                    <p className="font-semibold">New Chat</p>
-                    <p className="text-secondary">Start a fresh conversation</p>
+                    <div className="flex items-start gap-3">
+                      <MessageSquare size={16} className="mt-0.5" />
+                      <div className="flex flex-col">
+                        <p className="font-semibold text-sm">New Chat</p>
+                        <p className="text-xs opacity-70">Start a fresh conversation</p>
+                      </div>
+                    </div>
                   </Menu.Item>
+                  
                   <Menu.Separator />
+                  
+                  {/* Tools Section Header */}
+                  <Menu.Item onSelect={() => console.log('Tools')}>
+                    <div className="flex items-center gap-3">
+                      <Wrench size={16} />
+                      <span className="font-medium">🔧 Tools</span>
+                    </div>
+                  </Menu.Item>
+                  
+                  {/* Tool Items */}
+                  <Menu.Item onSelect={() => console.log('Function')}>
+                    <div className="flex items-center gap-3 pl-6">
+                      <Zap size={14} />
+                      <span>Function</span>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('File Search')}>
+                    <div className="flex items-center gap-3 pl-6">
+                      <Search size={14} />
+                      <span>File Search</span>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('Web Search')}>
+                    <div className="flex items-center gap-3 pl-6">
+                      <Globe size={14} />
+                      <span>Web Search</span>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('Code Interpreter')}>
+                    <div className="flex items-center gap-3 pl-6">
+                      <Code size={14} />
+                      <span>Code Interpreter</span>
+                    </div>
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => console.log('Image Generation')}>
+                    <div className="flex items-center gap-3 pl-6">
+                      <ImageIcon size={14} />
+                      <span>Image Generation</span>
+                    </div>
+                  </Menu.Item>
+                  
+                  <Menu.Separator />
+                  
+                  {/* Input Methods */}
                   <Menu.Item onSelect={() => console.log('Upload File')}>
-                    Upload File
+                    <div className="flex items-center gap-3">
+                      <Upload size={16} />
+                      <span>Upload File</span>
+                    </div>
                   </Menu.Item>
                   <Menu.Item onSelect={() => console.log('Voice Input')}>
-                    Voice Input
+                    <div className="flex items-center gap-3">
+                      <Mic size={16} />
+                      <span>Voice Input</span>
+                    </div>
                   </Menu.Item>
                   <Menu.Item onSelect={() => console.log('Camera')}>
-                    Camera
+                    <div className="flex items-center gap-3">
+                      <Camera size={16} />
+                      <span>Camera</span>
+                    </div>
                   </Menu.Item>
+                  
                   <Menu.Separator />
+                  
+                  {/* Quick Actions */}
                   <Menu.Item onSelect={() => console.log('Templates')}>
-                    Templates
+                    <div className="flex items-center gap-3">
+                      <FileText size={16} />
+                      <span>Templates</span>
+                    </div>
                   </Menu.Item>
-                  <Menu.Item onSelect={() => console.log('Shortcuts')}>
-                    Keyboard Shortcuts
+                  <Menu.Item onSelect={() => console.log('Keyboard Shortcuts')}>
+                    <div className="flex items-center gap-3">
+                      <Keyboard size={16} />
+                      <span>Keyboard Shortcuts</span>
+                    </div>
                   </Menu.Item>
                 </Menu.Content>
               </Menu>                <PromptInputAction tooltip="Search">

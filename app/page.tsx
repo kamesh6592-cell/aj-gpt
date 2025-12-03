@@ -1,5 +1,4 @@
 import { PromptInputWithActions } from "@/components/prompt-input-with-actions";
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import {
   Sidebar,
@@ -14,7 +13,6 @@ import {
 } from "@/components/ui/sidebar"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import { LiquidButton } from "@/components/ui/shadcn-io/liquid-button"
-import { Search } from "lucide-react"
 
 const conversationHistory = [
   {
@@ -149,9 +147,6 @@ function SidebarWithChatHistory() {
         </LiquidButton>
         <div className="flex items-center gap-2">
           <ThemeSwitcher />
-          <Button variant="ghost" className="size-8">
-            <Search className="size-4" />
-          </Button>
         </div>
       </SidebarHeader>
       <SidebarContent className="pt-4">

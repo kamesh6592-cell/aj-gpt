@@ -366,7 +366,6 @@ WebSearchResults.displayName = "WebSearchResults"
 
 function PromptInputWithActions() {
   const [prompt, setPrompt] = useState("")
-  const [webSearchEnabled, setWebSearchEnabled] = useState(false)
   const [searchResults, setSearchResults] = useState<SearchResponse | null>(null)
   const [isSearching, setIsSearching] = useState(false)
 
@@ -407,9 +406,16 @@ function PromptInputWithActions() {
   const handleSubmit = async () => {
     if (!prompt.trim() || isLoading) return
 
+    // Check if web search is needed based on prompt content or user selection
+    const shouldSearch = prompt.toLowerCase().includes('search') || 
+                        prompt.toLowerCase().includes('web') ||
+                        prompt.toLowerCase().includes('latest') ||
+                        prompt.toLowerCase().includes('current') ||
+                        prompt.toLowerCase().includes('recent')
+
     let messageText = prompt
     
-    if (webSearchEnabled) {
+    if (shouldSearch) {
       const searchData = await performWebSearch(prompt)
       if (searchData && searchData.results) {
         const searchContext = searchData.results.map((result: SearchResult) => 
@@ -477,44 +483,20 @@ function PromptInputWithActions() {
       
       <div className="shrink-0 bg-background p-4 max-[379px]:p-2">
         <div className="mx-auto max-w-3xl">
-          {webSearchEnabled && (
-            <div className="mb-3 flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
-              <Search className="h-4 w-4" />
-              <TextShimmer className="font-medium" duration={2}>
-                Web Search Enabled
-              </TextShimmer>
-            </div>
-          )}
-          
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="w-full">
-            <div className="relative">
-              <PromptBox
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder={webSearchEnabled ? "Ask anything and I'll search the web..." : "Ask anything..."}
-                className="w-full max-[379px]:text-sm pr-12"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit();
-                  }
-                }}
-              />
-              
-              <button
-                type="button"
-                onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-                className={cn(
-                  "absolute right-3 top-3 p-2 rounded-full transition-all duration-200",
-                  webSearchEnabled 
-                    ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" 
-                    : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-                title={webSearchEnabled ? "Disable web search" : "Enable web search"}
-              >
-                <Search className="h-4 w-4" />
-              </button>
-            </div>
+            <PromptBox
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Ask anything..."
+              className="w-full max-[379px]:text-sm"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
+              onSubmit={handleSubmit}
+            />
           </form>
         </div>
       </div>

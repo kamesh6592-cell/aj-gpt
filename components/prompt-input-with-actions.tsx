@@ -14,6 +14,7 @@ import {
 import { PromptBox } from "@/components/chatgpt-prompt-input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import React, { memo, useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import type { UIMessage } from "ai"
@@ -24,7 +25,6 @@ import {
   ThumbsUp,
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
-import React, { memo, useState } from "react"
 import Image from "next/image"
 
 type MessageComponentProps = {
@@ -148,24 +148,36 @@ const MessageComponent = memo(
 MessageComponent.displayName = "MessageComponent"
 
 const CodeBlockRenderer = memo(({ code, language = "python" }: { code: string; language?: string }) => {
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code)
+  const [copied, setCopied] = React.useState(false)
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy code:', err)
+    }
   }
 
   return (
-    <div className="my-4 border border-border" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderRadius: 'var(--radius-md)' }}>
-      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderTopLeftRadius: 'var(--radius-md)', borderTopRightRadius: 'var(--radius-md)' }}>
-        <span className="text-sm font-semibold text-foreground">{language}</span>
+    <div className="my-4 border border-border rounded-md overflow-hidden" style={{ backgroundColor: 'var(--gray-50)' }}>
+      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-50)' }}>
+        <span className="text-sm font-semibold text-foreground capitalize">{language}</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleCopy}
-          className="-mr-2 h-8 px-2 hover:bg-muted/50"
+          className="-mr-2 h-8 px-2 hover:bg-muted/50 transition-colors"
         >
-          <Copy size={14} />
+          {copied ? (
+            <span className="text-xs text-green-600 dark:text-green-400 font-medium">Copied!</span>
+          ) : (
+            <Copy size={14} />
+          )}
         </Button>
       </div>
-      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-100, light-dark(#ededed, #181818))', borderBottomLeftRadius: 'var(--radius-md)', borderBottomRightRadius: 'var(--radius-md)' }}>
+      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-50)' }}>
         <code className={`language-${language} text-foreground`}>{code}</code>
       </pre>
     </div>

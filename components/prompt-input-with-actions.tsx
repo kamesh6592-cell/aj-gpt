@@ -403,19 +403,12 @@ function PromptInputWithActions() {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (selectedTool?: string) => {
     if (!prompt.trim() || isLoading) return
-
-    // Check if web search is needed based on prompt content or user selection
-    const shouldSearch = prompt.toLowerCase().includes('search') || 
-                        prompt.toLowerCase().includes('web') ||
-                        prompt.toLowerCase().includes('latest') ||
-                        prompt.toLowerCase().includes('current') ||
-                        prompt.toLowerCase().includes('recent')
 
     let messageText = prompt
     
-    if (shouldSearch) {
+    if (selectedTool === 'searchWeb') {
       const searchData = await performWebSearch(prompt)
       if (searchData && searchData.results) {
         const searchContext = searchData.results.map((result: SearchResult) => 
@@ -495,7 +488,7 @@ function PromptInputWithActions() {
                   handleSubmit();
                 }
               }}
-              onSubmit={handleSubmit}
+              onToolSubmit={(tool) => handleSubmit(tool)}
             />
           </form>
         </div>

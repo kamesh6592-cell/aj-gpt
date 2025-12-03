@@ -40,8 +40,8 @@ const MicIcon = (props: React.SVGProps<SVGSVGElement>) => ( <svg width="24" heig
 const toolsList = [ { id: 'createImage', name: 'Create an image', shortName: 'Image', icon: PaintBrushIcon }, { id: 'searchWeb', name: 'Search the web', shortName: 'Search', icon: GlobeIcon }, { id: 'writeCode', name: 'Write or code', shortName: 'Write', icon: PencilIcon }, { id: 'deepResearch', name: 'Run deep research', shortName: 'Deep Search', icon: TelescopeIcon, extra: '5 left' }, { id: 'thinkLonger', name: 'Think for longer', shortName: 'Think', icon: LightbulbIcon }, ];
 
 // --- The Final, Self-Contained PromptBox Component ---
-export const PromptBox = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement> & { onSubmit?: () => void }>(
-  ({ className, onSubmit, ...props }, ref) => {
+export const PromptBox = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement> & { onToolSubmit?: (selectedTool?: string) => void }>(
+  ({ className, onToolSubmit, ...props }, ref) => {
     // ... all state and handlers are unchanged ...
     const internalTextareaRef = React.useRef<HTMLTextAreaElement>(null);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -117,7 +117,12 @@ export const PromptBox = React.forwardRef<HTMLTextAreaElement, React.TextareaHTM
 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button type="submit" disabled={!hasValue} className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none bg-black text-white hover:bg-black/80 dark:bg-white dark:text-black dark:hover:bg-white/80 disabled:bg-black/40 dark:disabled:bg-[#515151]">
+                    <button 
+                      type="button" 
+                      disabled={!hasValue} 
+                      onClick={() => onToolSubmit?.(selectedTool || undefined)}
+                      className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none bg-black text-white hover:bg-black/80 dark:bg-white dark:text-black dark:hover:bg-white/80 disabled:bg-black/40 dark:disabled:bg-[#515151]"
+                    >
                       <SendIcon className="h-6 w-6 text-bold" />
                       <span className="sr-only">Send message</span>
                     </button>

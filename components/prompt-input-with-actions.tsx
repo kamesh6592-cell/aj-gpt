@@ -11,12 +11,7 @@ import {
   MessageActions,
   MessageContent,
 } from "@/components/message"
-import {
-  PromptInput,
-  PromptInputAction,
-  PromptInputActions,
-  PromptInputTextarea,
-} from "@/components/prompt-kit/prompt-input"
+import { PromptBox } from "@/components/chatgpt-prompt-input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useChat } from "@ai-sdk/react"
@@ -24,28 +19,11 @@ import { DefaultChatTransport } from "ai"
 import type { UIMessage } from "ai"
 import {
   AlertTriangle,
-  ArrowUp,
   Copy,
-  Globe,
-  Mic,
-  MoreHorizontal,
-  Plus,
   ThumbsDown,
   ThumbsUp,
-  MessageSquare,
-  Upload,
-  Camera,
-  FileText,
-  Search,
-  Code,
-  Image as ImageIcon,
-  Wrench,
-  Zap,
-  Keyboard,
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
-import { Menu } from "@openai/apps-sdk-ui/components/Menu"
-import { Button as OpenAIButton } from "@openai/apps-sdk-ui/components/Button"
 import React, { memo, useState } from "react"
 import Image from "next/image"
 
@@ -275,202 +253,20 @@ function PromptInputWithActions() {
       
       <div className="shrink-0 border-t bg-background p-4 max-[379px]:p-2">
         <div className="mx-auto max-w-3xl">
-          <PromptInput
-            isLoading={isLoading}
-            value={prompt}
-            onValueChange={setPrompt}
-            onSubmit={handleSubmit}
-            className="border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs max-[379px]:rounded-2xl"
-          >
-          <div className="flex flex-col">
-            <PromptInputTextarea
-              placeholder="Ask anything"
-              className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base max-[379px]:text-sm max-[379px]:pl-3"
+          <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="w-full">
+            <PromptBox
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Ask anything..."
+              className="w-full max-[379px]:text-sm"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
             />
-
-            <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3 max-[379px]:mt-3 max-[379px]:px-2 max-[379px]:pb-2">
-            <div className="flex items-center gap-2 max-[379px]:gap-1">
-              <Menu>
-                <Menu.Trigger asChild>
-                  <OpenAIButton 
-                    color="primary" 
-                    size="md" 
-                    variant="ghost"
-                    className="hover:bg-muted/50 transition-colors duration-150 max-[379px]:px-2"
-                  >
-                    <Plus size={18} className="max-[379px]:size-4" />
-                  </OpenAIButton>
-                </Menu.Trigger>
-                <Menu.Content 
-                  width={280} 
-                  minWidth={280}
-                  side="top"
-                  align="start"
-                  sideOffset={12}
-                >
-                  {/* New Chat - Highlighted */}
-                  <Menu.Item onSelect={() => console.log('New Chat')}>
-                    <div className="flex items-start gap-3">
-                      <div className="p-1.5 rounded-md bg-primary/10">
-                        <MessageSquare size={16} className="text-primary" />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <p className="font-semibold text-sm text-foreground">New Chat</p>
-                        <p className="text-xs text-muted-foreground leading-tight">Start a fresh conversation</p>
-                      </div>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Separator />
-                  
-                  {/* Tools Section */}
-                  <div className="px-3 py-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Wrench size={16} className="text-muted-foreground" />
-                      <span className="text-sm font-medium text-foreground">Tools</span>
-                    </div>
-                  </div>
-                  
-                  <Menu.Item onSelect={() => console.log('Function')}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 flex justify-center">
-                        <Zap size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm text-foreground">Function</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('File Search')}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 flex justify-center">
-                        <Search size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm text-foreground">File Search</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('Web Search')}>
-                    <div className="flex items-center gap-3 px-2 py-1">
-                      <div className="w-8 flex justify-center">
-                        <Globe size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm text-foreground">Web Search</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('Code Interpreter')}>
-                    <div className="flex items-center gap-3 px-2 py-1">
-                      <div className="w-8 flex justify-center">
-                        <Code size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm text-foreground">Code Interpreter</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('Image Generation')}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 flex justify-center">
-                        <ImageIcon size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm text-foreground">Image Generation</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Separator />
-                  
-                  {/* Input Methods */}
-                  <Menu.Item onSelect={() => console.log('Upload File')}>
-                    <div className="flex items-center gap-3 px-2 py-2">
-                      <div className="p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                        <Upload size={16} className="text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <span className="text-sm font-medium">Upload File</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('Voice Input')}>
-                    <div className="flex items-center gap-3 px-2 py-2">
-                      <div className="p-1.5 rounded-md bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                        <Mic size={16} className="text-green-600 dark:text-green-400" />
-                      </div>
-                      <span className="text-sm font-medium">Voice Input</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('Camera')}>
-                    <div className="flex items-center gap-3 px-2 py-2">
-                      <div className="p-1.5 rounded-md bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
-                        <Camera size={16} className="text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <span className="text-sm font-medium">Camera</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Separator />
-                  
-                  {/* Quick Actions */}
-                  <Menu.Item onSelect={() => console.log('Templates')}>
-                    <div className="flex items-center gap-3 px-2 py-1">
-                      <div className="w-8 flex justify-center">
-                        <FileText size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm">Templates</span>
-                    </div>
-                  </Menu.Item>
-                  
-                  <Menu.Item onSelect={() => console.log('Keyboard Shortcuts')}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 flex justify-center">
-                        <Keyboard size={16} className="text-muted-foreground" />
-                      </div>
-                      <span className="text-sm text-foreground">Keyboard Shortcuts</span>
-                    </div>
-                  </Menu.Item>
-                </Menu.Content>
-              </Menu>                <PromptInputAction tooltip="Search">
-                  <Button variant="outline" className="rounded-full max-[379px]:px-2 max-[379px]:text-xs">
-                    <Globe size={18} className="max-[379px]:size-4" />
-                    <span className="max-[379px]:hidden">Search</span>
-                  </Button>
-                </PromptInputAction>
-
-                <PromptInputAction tooltip="More actions">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="size-9 rounded-full max-[379px]:size-8"
-                  >
-                    <MoreHorizontal size={18} className="max-[379px]:size-4" />
-                  </Button>
-                </PromptInputAction>
-              </div>
-              <div className="flex items-center gap-2 max-[379px]:gap-1">
-                <PromptInputAction tooltip="Voice input">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="size-9 rounded-full max-[379px]:size-8"
-                  >
-                    <Mic size={18} className="max-[379px]:size-4" />
-                  </Button>
-                </PromptInputAction>
-
-                <Button
-                  size="icon"
-                  disabled={!prompt.trim() || isLoading}
-                  onClick={handleSubmit}
-                  className="size-9 rounded-full max-[379px]:size-8"
-                >
-                  {!isLoading ? (
-                    <ArrowUp size={18} className="max-[379px]:size-4" />
-                  ) : (
-                    <span className="size-3 rounded-xs bg-white max-[379px]:size-2" />
-                  )}
-                </Button>
-              </div>
-            </PromptInputActions>
-          </div>
-        </PromptInput>
+          </form>
         </div>
       </div>
     </div>

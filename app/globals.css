@@ -42,6 +42,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius: var(----radius);
 }
 
 :root {
@@ -128,15 +129,15 @@
     .mobile-hide {
       @apply hidden;
     }
-    
+
     .mobile-text-sm {
       @apply text-sm;
     }
-    
+
     .mobile-p-2 {
       @apply p-2;
     }
-    
+
     .mobile-gap-1 {
       @apply gap-1;
     }

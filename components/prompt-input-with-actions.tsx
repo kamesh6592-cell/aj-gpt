@@ -34,6 +34,9 @@ type MessageComponentProps = {
 
 const MessageComponent = memo(
   ({ message, isLastMessage }: MessageComponentProps) => {
+    const [copied, setCopied] = useState(false)
+    const [liked, setLiked] = useState(false)
+    const [disliked, setDisliked] = useState(false)
     const isAssistant = message.role === "assistant"
 
     return (
@@ -103,19 +106,60 @@ const MessageComponent = memo(
                 isLastMessage && "opacity-100"
               )}
             >
-              <MessageAction tooltip="Copy" delayDuration={100}>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Copy />
+              <MessageAction tooltip={copied ? "Copied!" : "Copy"} delayDuration={100}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn(
+                    "rounded-full transition-colors",
+                    copied && "text-green-600 dark:text-green-400"
+                  )}
+                  onClick={async () => {
+                    try {
+                      const textContent = message.parts
+                        .map((part) => (part.type === "text" ? part.text : null))
+                        .join("");
+                      await navigator.clipboard.writeText(textContent);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    } catch (err) {
+                      console.error('Failed to copy message:', err);
+                    }
+                  }}
+                >
+                  <Copy className={cn("h-4 w-4", copied && "animate-pulse")} />
                 </Button>
               </MessageAction>
-              <MessageAction tooltip="Upvote" delayDuration={100}>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <ThumbsUp />
+              <MessageAction tooltip={liked ? "Liked!" : "Upvote"} delayDuration={100}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn(
+                    "rounded-full transition-colors",
+                    liked && "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                  )}
+                  onClick={() => {
+                    setLiked(!liked);
+                    if (disliked) setDisliked(false);
+                  }}
+                >
+                  <ThumbsUp className={cn("h-4 w-4", liked && "fill-current")} />
                 </Button>
               </MessageAction>
-              <MessageAction tooltip="Downvote" delayDuration={100}>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <ThumbsDown />
+              <MessageAction tooltip={disliked ? "Disliked!" : "Downvote"} delayDuration={100}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn(
+                    "rounded-full transition-colors",
+                    disliked && "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20"
+                  )}
+                  onClick={() => {
+                    setDisliked(!disliked);
+                    if (liked) setLiked(false);
+                  }}
+                >
+                  <ThumbsDown className={cn("h-4 w-4", disliked && "fill-current")} />
                 </Button>
               </MessageAction>
             </MessageActions>
@@ -132,9 +176,28 @@ const MessageComponent = memo(
                 "flex gap-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
               )}
             >
-              <MessageAction tooltip="Copy" delayDuration={100}>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Copy />
+              <MessageAction tooltip={copied ? "Copied!" : "Copy"} delayDuration={100}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn(
+                    "rounded-full transition-colors",
+                    copied && "text-green-600 dark:text-green-400"
+                  )}
+                  onClick={async () => {
+                    try {
+                      const textContent = message.parts
+                        .map((part) => (part.type === "text" ? part.text : null))
+                        .join("");
+                      await navigator.clipboard.writeText(textContent);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    } catch (err) {
+                      console.error('Failed to copy message:', err);
+                    }
+                  }}
+                >
+                  <Copy className={cn("h-4 w-4", copied && "animate-pulse")} />
                 </Button>
               </MessageAction>
             </MessageActions>
@@ -263,7 +326,7 @@ function PromptInputWithActions() {
         </ChatContainerContent>
       </ChatContainerRoot>
       
-      <div className="shrink-0 border-t bg-background p-4 max-[379px]:p-2">
+      <div className="shrink-0 bg-background p-4 max-[379px]:p-2">
         <div className="mx-auto max-w-3xl">
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="w-full">
             <PromptBox

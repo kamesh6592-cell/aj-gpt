@@ -23,9 +23,24 @@ import {
   Copy,
   ThumbsDown,
   ThumbsUp,
+  Search,
+  ExternalLink,
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
+import { TextShimmer } from "@/components/ui/text-shimmer"
 import Image from "next/image"
+
+interface SearchResult {
+  title: string
+  url: string
+  content: string
+}
+
+interface SearchResponse {
+  success: boolean
+  results: SearchResult[]
+  answer?: string
+}
 
 type MessageComponentProps = {
   message: UIMessage
@@ -274,8 +289,64 @@ const ErrorMessage = memo(({ error }: { error: Error }) => (
 
 ErrorMessage.displayName = "ErrorMessage"
 
+const WebSearchResults = memo(({ results }: { results: SearchResponse }) => {
+  if (!results || !results.results) return null
+
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col items-start gap-2 px-2 md:px-10 mb-4">
+      <div className="group flex w-full flex-col gap-0">
+        <div className="text-foreground prose w-full min-w-0 flex-1 rounded-lg bg-muted/30 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Search className="h-4 w-4" />
+            <TextShimmer className="text-sm font-semibold">
+              Web Search Results
+            </TextShimmer>
+          </div>
+          
+          {results.answer && (
+            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Quick Answer:</p>
+              <p className="text-blue-700 dark:text-blue-300">{results.answer}</p>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            {results.results.slice(0, 3).map((result: SearchResult, index: number) => (
+              <div key={index} className="border border-border rounded-lg p-3 hover:bg-accent/50 transition-colors">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-sm text-foreground line-clamp-2">
+                      {result.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                      {result.content}
+                    </p>
+                  </div>
+                  <a
+                    href={result.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+})
+
+WebSearchResults.displayName = "WebSearchResults"
+
 function PromptInputWithActions() {
   const [prompt, setPrompt] = useState("")
+  const [webSearchEnabled, setWebSearchEnabled] = useState(false)
+  const [searchResults, setSearchResults] = useState<SearchResponse | null>(null)
+  const [isSearching, setIsSearching] = useState(false)
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -285,10 +356,49 @@ function PromptInputWithActions() {
 
   const isLoading = status !== "ready"
 
-  const handleSubmit = () => {
+  const performWebSearch = async (query: string) => {
+    try {
+      setIsSearching(true)
+      const response = await fetch('/api/web-search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Search failed')
+      }
+
+      const data: SearchResponse = await response.json()
+      setSearchResults(data)
+      return data
+    } catch (error) {
+      console.error('Web search error:', error)
+      return null
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  const handleSubmit = async () => {
     if (!prompt.trim() || isLoading) return
 
-    sendMessage({ text: prompt })
+    let messageText = prompt
+    
+    if (webSearchEnabled) {
+      const searchData = await performWebSearch(prompt)
+      if (searchData && searchData.results) {
+        const searchContext = searchData.results.map((result: SearchResult) => 
+          `[${result.title}](${result.url}): ${result.content}`
+        ).join('\n\n')
+        
+        messageText = `${prompt}\n\n**Web Search Results:**\n${searchContext}`
+      }
+    }
+
+    sendMessage({ text: messageText })
     setPrompt("")
   }
 
@@ -308,17 +418,34 @@ function PromptInputWithActions() {
               </div>
             </div>
           ) : (
-            messages.map((message, index) => {
-              const isLastMessage = index === messages.length - 1
+            <>
+              {messages.map((message, index) => {
+                const isLastMessage = index === messages.length - 1
 
-              return (
-                <MessageComponent
-                  key={message.id}
-                  message={message}
-                  isLastMessage={isLastMessage}
-                />
-              )
-            })
+                return (
+                  <MessageComponent
+                    key={message.id}
+                    message={message}
+                    isLastMessage={isLastMessage}
+                  />
+                )
+              })}
+              
+              {isSearching && (
+                <div className="mx-auto flex w-full max-w-3xl flex-col items-start gap-2 px-2 md:px-10">
+                  <div className="group flex w-full flex-col gap-0">
+                    <div className="text-foreground prose w-full min-w-0 flex-1 rounded-lg bg-transparent p-4 flex items-center">
+                      <Search className="h-4 w-4 mr-2" />
+                      <TextShimmer className="text-sm">
+                        Searching the web...
+                      </TextShimmer>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {searchResults && <WebSearchResults results={searchResults} />}
+            </>
           )}
 
           {status === "submitted" && <LoadingMessage />}
@@ -328,19 +455,44 @@ function PromptInputWithActions() {
       
       <div className="shrink-0 bg-background p-4 max-[379px]:p-2">
         <div className="mx-auto max-w-3xl">
+          {webSearchEnabled && (
+            <div className="mb-3 flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+              <Search className="h-4 w-4" />
+              <TextShimmer className="font-medium" duration={2}>
+                Web Search Enabled
+              </TextShimmer>
+            </div>
+          )}
+          
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="w-full">
-            <PromptBox
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ask anything..."
-              className="w-full max-[379px]:text-sm"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit();
-                }
-              }}
-            />
+            <div className="relative">
+              <PromptBox
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder={webSearchEnabled ? "Ask anything and I'll search the web..." : "Ask anything..."}
+                className="w-full max-[379px]:text-sm pr-12"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit();
+                  }
+                }}
+              />
+              
+              <button
+                type="button"
+                onClick={() => setWebSearchEnabled(!webSearchEnabled)}
+                className={cn(
+                  "absolute right-3 top-3 p-2 rounded-full transition-all duration-200",
+                  webSearchEnabled 
+                    ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400" 
+                    : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+                title={webSearchEnabled ? "Disable web search" : "Enable web search"}
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            </div>
           </form>
         </div>
       </div>

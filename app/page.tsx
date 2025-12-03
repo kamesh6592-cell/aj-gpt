@@ -179,13 +179,6 @@ export default function Home() {
       <SidebarWithChatHistory />
       <SidebarInset>
         <main className="flex h-screen flex-col">
-          <header className="bg-background z-10 flex h-16 w-full shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            <div className="flex items-center gap-2">
-              <Image src="/AJ.svg" alt="AJ STUDIOZ" width={32} height={32} className="size-8" />
-              <span className="font-semibold">New Conversation</span>
-            </div>
-          </header>
           <div className="flex-1 min-h-0">
             <PromptInputWithActions />
           </div>

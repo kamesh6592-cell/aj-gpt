@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant xs (&:is(@media (min-width: 380px)));
 
 @theme inline {
   --color-background: var(--background);
@@ -118,5 +119,26 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Ultra mobile optimizations for screens <= 380px */
+  @media (max-width: 379px) {
+    .mobile-hide {
+      @apply hidden;
+    }
+    
+    .mobile-text-sm {
+      @apply text-sm;
+    }
+    
+    .mobile-p-2 {
+      @apply p-2;
+    }
+    
+    .mobile-gap-1 {
+      @apply gap-1;
+    }
   }
 }

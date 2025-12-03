@@ -242,7 +242,7 @@ function PromptInputWithActions() {
   return (
     <div className="flex h-full flex-col">
       <ChatContainerRoot className="flex-1 overflow-y-auto">
-        <ChatContainerContent className="space-y-12 px-4 py-12 min-h-full">
+        <ChatContainerContent className="space-y-12 px-4 py-12 min-h-full max-[379px]:px-2 max-[379px]:py-6 max-[379px]:space-y-6">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
@@ -273,32 +273,32 @@ function PromptInputWithActions() {
         </ChatContainerContent>
       </ChatContainerRoot>
       
-      <div className="shrink-0 border-t bg-background p-4">
+      <div className="shrink-0 border-t bg-background p-4 max-[379px]:p-2">
         <div className="mx-auto max-w-3xl">
           <PromptInput
             isLoading={isLoading}
             value={prompt}
             onValueChange={setPrompt}
             onSubmit={handleSubmit}
-            className="border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs"
+            className="border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs max-[379px]:rounded-2xl"
           >
           <div className="flex flex-col">
             <PromptInputTextarea
               placeholder="Ask anything"
-              className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base"
+              className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base max-[379px]:text-sm max-[379px]:pl-3"
             />
 
-            <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3">
-            <div className="flex items-center gap-2">
+            <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3 max-[379px]:mt-3 max-[379px]:px-2 max-[379px]:pb-2">
+            <div className="flex items-center gap-2 max-[379px]:gap-1">
               <Menu>
                 <Menu.Trigger asChild>
                   <OpenAIButton 
                     color="primary" 
                     size="md" 
                     variant="ghost"
-                    className="hover:bg-muted/50 transition-colors duration-150"
+                    className="hover:bg-muted/50 transition-colors duration-150 max-[379px]:px-2"
                   >
-                    <Plus size={18} />
+                    <Plus size={18} className="max-[379px]:size-4" />
                   </OpenAIButton>
                 </Menu.Trigger>
                 <Menu.Content 
@@ -428,9 +428,9 @@ function PromptInputWithActions() {
                   </Menu.Item>
                 </Menu.Content>
               </Menu>                <PromptInputAction tooltip="Search">
-                  <Button variant="outline" className="rounded-full">
-                    <Globe size={18} />
-                    Search
+                  <Button variant="outline" className="rounded-full max-[379px]:px-2 max-[379px]:text-xs">
+                    <Globe size={18} className="max-[379px]:size-4" />
+                    <span className="max-[379px]:hidden">Search</span>
                   </Button>
                 </PromptInputAction>
 
@@ -438,20 +438,20 @@ function PromptInputWithActions() {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="size-9 rounded-full"
+                    className="size-9 rounded-full max-[379px]:size-8"
                   >
-                    <MoreHorizontal size={18} />
+                    <MoreHorizontal size={18} className="max-[379px]:size-4" />
                   </Button>
                 </PromptInputAction>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 max-[379px]:gap-1">
                 <PromptInputAction tooltip="Voice input">
                   <Button
                     variant="outline"
                     size="icon"
-                    className="size-9 rounded-full"
+                    className="size-9 rounded-full max-[379px]:size-8"
                   >
-                    <Mic size={18} />
+                    <Mic size={18} className="max-[379px]:size-4" />
                   </Button>
                 </PromptInputAction>
 
@@ -459,12 +459,12 @@ function PromptInputWithActions() {
                   size="icon"
                   disabled={!prompt.trim() || isLoading}
                   onClick={handleSubmit}
-                  className="size-9 rounded-full"
+                  className="size-9 rounded-full max-[379px]:size-8"
                 >
                   {!isLoading ? (
-                    <ArrowUp size={18} />
+                    <ArrowUp size={18} className="max-[379px]:size-4" />
                   ) : (
-                    <span className="size-3 rounded-xs bg-white" />
+                    <span className="size-3 rounded-xs bg-white max-[379px]:size-2" />
                   )}
                 </Button>
               </div>

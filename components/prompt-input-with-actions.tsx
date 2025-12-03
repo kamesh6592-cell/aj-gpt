@@ -15,6 +15,7 @@ import { PromptBox } from "@/components/chatgpt-prompt-input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import React, { memo, useState } from "react"
+import { useTheme } from "next-themes"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import type { UIMessage } from "ai"
@@ -25,9 +26,11 @@ import {
   ThumbsUp,
   Search,
   ExternalLink,
+  Check,
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
 import { TextShimmer } from "@/components/ui/text-shimmer"
+import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "@/components/ui/code-block"
 import Image from "next/image"
 
 interface SearchResult {
@@ -227,6 +230,7 @@ MessageComponent.displayName = "MessageComponent"
 
 const CodeBlockRenderer = memo(({ code, language = "python" }: { code: string; language?: string }) => {
   const [copied, setCopied] = React.useState(false)
+  const { theme } = useTheme()
 
   const handleCopy = async () => {
     try {
@@ -239,26 +243,44 @@ const CodeBlockRenderer = memo(({ code, language = "python" }: { code: string; l
   }
 
   return (
-    <div className="my-4 border border-border rounded-md overflow-hidden" style={{ backgroundColor: 'var(--gray-50)' }}>
-      <div className="flex items-center justify-between border-b border-border px-4 py-2" style={{ backgroundColor: 'var(--gray-50)' }}>
-        <span className="text-sm font-semibold text-foreground capitalize">{language}</span>
+    <CodeBlock className="my-4">
+      <CodeBlockGroup className="border-b border-border px-4 py-2 bg-muted/30">
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-red-500" />
+          <div className="h-2 w-2 rounded-full bg-yellow-500" />
+          <div className="h-2 w-2 rounded-full bg-green-500" />
+          <span className="ml-2 text-sm font-medium text-muted-foreground capitalize">
+            {language}
+          </span>
+        </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleCopy}
-          className="-mr-2 h-8 px-2 hover:bg-muted/50 transition-colors"
+          className="h-8 px-2 hover:bg-muted/50 transition-all duration-200"
         >
           {copied ? (
-            <span className="text-xs text-green-600 dark:text-green-400 font-medium">Copied!</span>
+            <div className="flex items-center gap-2">
+              <Check size={14} className="text-green-600 dark:text-green-400" />
+              <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                Copied!
+              </span>
+            </div>
           ) : (
-            <Copy size={14} />
+            <div className="flex items-center gap-2">
+              <Copy size={14} />
+              <span className="text-xs">Copy</span>
+            </div>
           )}
         </Button>
-      </div>
-      <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed" style={{ backgroundColor: 'var(--gray-50)' }}>
-        <code className={`language-${language} text-foreground`}>{code}</code>
-      </pre>
-    </div>
+      </CodeBlockGroup>
+      <CodeBlockCode
+        code={code}
+        language={language}
+        theme={theme === 'dark' ? 'github-dark' : 'github-light'}
+        className="bg-card"
+      />
+    </CodeBlock>
   )
 })
 

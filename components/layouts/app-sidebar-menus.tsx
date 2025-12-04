@@ -6,15 +6,20 @@ import {
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 import { SidebarGroupContent } from "@/components/ui/sidebar";
 import { SidebarGroup } from "@/components/ui/sidebar";
+import { SettingsModal } from "@/components/ui/settings-modal";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { PlusIcon, Settings } from "lucide-react";
 
 export function AppSidebarMenus() {
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
+    <TooltipProvider>
     <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu>
@@ -47,25 +52,23 @@ export function AppSidebarMenus() {
           </SidebarMenuItem>
           
           <SidebarMenuItem className="mb-1">
-            <Link
-              href="/settings"
-              onClick={(e) => {
-                e.preventDefault();
+            <SidebarMenuButton 
+              tooltip="Settings"
+              className="flex font-medium group/settings cursor-pointer"
+              onClick={() => {
                 setOpenMobile(false);
-                router.push(`/settings`);
+                setSettingsOpen(true);
               }}
             >
-              <SidebarMenuButton 
-                tooltip="Settings"
-                className="flex font-medium group/settings"
-              >
-                <Settings className="size-4" />
-                Settings
-              </SidebarMenuButton>
-            </Link>
+              <Settings className="size-4" />
+              Settings
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>
+      
+      <SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
     </SidebarGroup>
+    </TooltipProvider>
   );
 }

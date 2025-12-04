@@ -67,7 +67,7 @@ export function SidebarHeaderShared({
         <SidebarMenuItem className="flex items-center gap-0.5 mb-1">
           <SidebarMenuButton 
             asChild 
-            className="hover:bg-transparent group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full"
+            className="hover:bg-transparent group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:p-2"
           >
             <Link href={href} onClick={handleLinkClick} className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
               <Image 
@@ -75,18 +75,18 @@ export function SidebarHeaderShared({
                 alt="AJ GPT Logo" 
                 width={32} 
                 height={32} 
-                className="rounded-full flex-shrink-0"
+                className="rounded-full flex-shrink-0 cursor-pointer group-data-[collapsible=icon]:cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleSidebar();
+                }}
               />
               <span className="font-bold text-lg group-data-[collapsible=icon]:hidden text-orange-600 dark:text-orange-400">
                 AJ GPT
               </span>
             </Link>
           </SidebarMenuButton>
-          <SidebarTrigger className="ml-auto group-data-[collapsible=icon]:ml-0" />
-        </SidebarMenuItem>
-        {/* Additional toggle button for collapsed state */}
-        <SidebarMenuItem className="hidden group-data-[collapsible=icon]:flex justify-center mt-2">
-          <SidebarTrigger className="size-8 p-0" />
+          <SidebarTrigger className="ml-auto group-data-[collapsible=icon]:hidden" />
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>

@@ -82,7 +82,11 @@ export function SidebarHeaderShared({
               </span>
             </Link>
           </SidebarMenuButton>
-          <SidebarTrigger className="ml-auto group-data-[collapsible=icon]:hidden" />
+          <SidebarTrigger className="ml-auto group-data-[collapsible=icon]:ml-0" />
+        </SidebarMenuItem>
+        {/* Additional toggle button for collapsed state */}
+        <SidebarMenuItem className="hidden group-data-[collapsible=icon]:flex justify-center mt-2">
+          <SidebarTrigger className="size-8 p-0" />
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>

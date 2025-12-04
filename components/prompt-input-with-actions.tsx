@@ -30,7 +30,7 @@ import {
 } from "lucide-react"
 import { TypingLoader } from "@/components/ui/loader"
 import { TextShimmer } from "@/components/ui/text-shimmer"
-import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "@/components/ui/code-block"
+import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "@/components/code-block"
 import Image from "next/image"
 
 interface SearchResult {

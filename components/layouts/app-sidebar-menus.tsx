@@ -8,7 +8,7 @@ import { SidebarGroupContent } from "@/components/ui/sidebar";
 import { SidebarGroup } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Settings } from "lucide-react";
 
 export function AppSidebarMenus() {
   const router = useRouter();
@@ -42,6 +42,25 @@ export function AppSidebarMenus() {
                     N
                   </span>
                 </div>
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+          
+          <SidebarMenuItem className="mb-1">
+            <Link
+              href="/settings"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenMobile(false);
+                router.push(`/settings`);
+              }}
+            >
+              <SidebarMenuButton 
+                tooltip="Settings"
+                className="flex font-medium group/settings"
+              >
+                <Settings className="size-4" />
+                Settings
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
